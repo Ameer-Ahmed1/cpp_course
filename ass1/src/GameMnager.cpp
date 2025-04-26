@@ -9,7 +9,7 @@ private:
 
 public:
     GameManager() = default;
-
+    
     void start(const std::string& filePath) {
         //BoardObject::setBoardSize(20, 20); // for example
         //matrix[x][y] = Empty::getInstance();  // ✅ Shared singleton instance//
