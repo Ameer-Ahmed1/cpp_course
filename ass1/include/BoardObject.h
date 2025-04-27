@@ -1,27 +1,40 @@
 #pragma once
 #include "Point.h"
 #include "Enums.h"
+
+class GameBoard;  // Forward declaration
+static GameBoard* board;
+
 class BoardObject {
 protected:
-    static int h;  // board height
-    static int w;  // board width
     Point pos;  // Position of the object
-    // Constructor: Prevents direct instantiation of BoardObject
     BoardObject(Point p) : pos(p) {}
 
 public:
-    virtual ~BoardObject() = default;  // Virtual destructor
-
-    // Pure virtual function makes BoardObject an abstract class
+    virtual ~BoardObject() = default;
+    virtual void onCollideWithShell() = 0;
     virtual void somePureVirtualFunction() = 0;
 
-    // Static function for collision check, now returning true/false
-    static bool checkColl(const BoardObject& a, const BoardObject& b) {
-        return (a.pos.x == b.pos.x && a.pos.y == b.pos.y);  // Returns true or false
+    static bool checkColl(const BoardObject& a, const BoardObject& b) {//givin object
+        return (a.pos.x == b.pos.x && a.pos.y == b.pos.y);
     }
-    static void setBoardSize(int height, int width) {
-        h = height;
-        w = width;
+    static *BoardObject checkColl(Point pos) { //givin point return whats in that point
+        return get_boardobj(pos);
+
     }
-    
+
+    static void setGameBoard(GameBoard* gb) {
+        board = gb;
+    }
+    static *BoardObject get_boardobj(Point p) {
+        return  board->matrix[p.x][p.y]; 
+    }
+
+    static int GetBoardWidth() {
+        return board.width;
+    }
+    static int GetBoardHight() {
+        return board.height;
+    }
+
 };
