@@ -135,3 +135,6 @@ bool Tank::shoot(GameManager& gameManager, Tank* otherTank) { // Pass GameManage
     shootingTime = 4;
     return true;
 }
+void onCollideWithShell() override {
+    // Tank-specific reaction to getting hit by a shell
+}

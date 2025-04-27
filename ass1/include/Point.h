@@ -25,6 +25,7 @@ public:
         x = (x % width + width) % width;
         y = (y % height + height) % height;
     }
+    
 
     void moveBack(Direction dir, int width, int height) {
         switch (dir) {
