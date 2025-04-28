@@ -13,23 +13,14 @@ protected:
 public:
     virtual ~BoardObject() = default;
     virtual void onCollideWithShell() = 0;
-    virtual void somePureVirtualFunction() = 0;
+    virtual BoardObjectType getObjectType() const = 0; // PURE VIRTUAL function
 
-    static bool checkColl(const BoardObject& a, const BoardObject& b) {//givin object
-        return (a.pos.x == b.pos.x && a.pos.y == b.pos.y);
-    }
     static *BoardObject checkColl(Point pos) { //givin point return whats in that point
-        return get_boardobj(pos);
-
+        return board->matrix[p.x][p.y]; 
     }
-
     static void setGameBoard(GameBoard* gb) {
         board = gb;
     }
-    static *BoardObject get_boardobj(Point p) {
-        return  board->matrix[p.x][p.y]; 
-    }
-
     static int GetBoardWidth() {
         return board.width;
     }

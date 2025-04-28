@@ -10,7 +10,7 @@ private:
 public:
     GameManager() = default;
     
-    void start(const std::string& filePath) {
+    void initalization(const std::string& filePath) {
         //BoardObject::setBoardSize(20, 20); // for example
         //matrix[x][y] = Empty::getInstance();  // ✅ Shared singleton instance//
         //to do
@@ -28,6 +28,22 @@ public:
 
         file.close();
         std::cout << "Game started with " << steps << " steps." << std::endl;
+
+
+    }
+
+    void start(){
+        while (win != -1 and steps>0){
+            move shell and check it has to be delted .
+            for (Shell* shell : shells) {
+                if (shell->shouldBeDestroyed) {
+                tank.removeShell(shell);
+                }
+            }
+            update steps
+            call the alfgo
+            do the action
+        }
     }
 
     int getSteps() const {
@@ -41,4 +57,10 @@ public:
     void setWinner(int w) {
         winner = w;
     }
+
+
+
+
+
+    
 };

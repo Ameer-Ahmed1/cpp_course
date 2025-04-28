@@ -30,3 +30,12 @@ enum class Direction {
     DL = 5, // Down-Left (value = 5)
     UL = 7  // Up-Left (value = 7)
 };
+
+
+enum class BoardObjectType {
+    Empty,
+    Wall,
+    Tank,
+    Shell,
+    Mine
+};

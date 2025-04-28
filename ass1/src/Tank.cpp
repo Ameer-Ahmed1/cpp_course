@@ -25,6 +25,24 @@ private:
     int remainingShells;
     std::vector<Shell*> activeShells;
     int id;
+    int handleColl(Point pos){
+       /* BoardObject* collidedObject = checkColl(pos);
+        switch (collidedObject->getObjectType()) {
+            case BoardObjectType::Empty:
+                return -1;  // Can step into empty space
+            case BoardObjectType::Mine:
+                return this.id;  // the looser one
+    
+            case BoardObjectType::Wall:
+                return 0; illegal
+    
+            case BoardObjectType::Tank:
+                return 3 ; 
+            case BoardObjectType::Shell:
+                return this.id;  // Can move into a shell spot (optional - depends on your game logic)
+        }*/
+    
+    }
 
 public:
     Tank(Point p, Direction direction, int shells, int tankId)
@@ -43,6 +61,7 @@ public:
     Point moveBackward();
     void rotate(Direction newDir);
     bool shoot(GameManager& gameManager, Tank* otherTank); // Pass GameManager
+    void removeShell(Shell* shell);  // delete from the activeShells
     bool checkRemaining() const {
         return remainingShells > 0;
     }
@@ -74,6 +93,9 @@ public:
     void decreaseShootingTime(){
         shootingTime--;
     }
+    BoardObjectType getObjectType() const override {
+        return BoardObjectType::Tank;
+    }
 };
 
 // Tank class method implementations
@@ -82,17 +104,10 @@ Point Tank::moveForward() {
     if (waitingTime > 0) return pos; // Return current position if waiting
 
     Point newPos = pos;
-
-    switch (dir) {
-        case Direction::U:    newPos.y--; break;
-        case Direction::UR:   newPos.x++; newPos.y--; break;
-        case Direction::R:    newPos.x++; break;
-        case Direction::DR:   newPos.x++; newPos.y++; break;
-        case Direction::D:    newPos.y++; break;
-        case Direction::DL:   newPos.x--; newPos.y++; break;
-        case Direction::L:    newPos.x--; break;
-        case Direction::UL:   newPos.x--; newPos.y--; break;
-    }
+    newPos.move(dir,GetBoardWidth(),GetBoardHight());
+    //checking for coll
+    checkColl(Point pos) ;
+    result = handleColl(pos);
     return newPos; // Return the *desired* new position
 }
 
@@ -129,12 +144,22 @@ bool Tank::shoot(GameManager& gameManager, Tank* otherTank) { // Pass GameManage
     if (shootingTime > 0 || remainingShells <= 0) return false;
 
     // Create a new shell.  The GameManager will manage its lifetime.
-    Shell* shell = new Shall(Point(pos.x, pos.y), *this, dir, 2);
+    Shell* shell = new shell(Point(pos.x, pos.y), *this, dir, 2);
     gameManager.addShell(shell); // Add to GameManager's shell list
     remainingShells--;
     shootingTime = 4;
     return true;
 }
-void onCollideWithShell() override {
-    // Tank-specific reaction to getting hit by a shell
+int onCollideWithShell() override {
+    return id;
 }
+
+void Tank::removeShell(Shell* shell) {
+    auto it = std::find(activeShells.begin(), activeShells.end(), shell);
+    if (it != activeShells.end()) {
+        delete *it;
+        activeShells.erase(it);
+    }
+}
+
+

@@ -9,10 +9,6 @@ public:
     Mine(Point p, bool isActive)
         : BoardObject(p), active(isActive) {}
 
-    void somePureVirtualFunction() override {
-        // Optional: Implement behavior for this specific Mine type
-    }
-
     bool isActive() const {
         return active;
     }
@@ -23,5 +19,12 @@ public:
 
     void activate() {
         active = true;   // Activates the mine
+    }
+    
+    BoardObjectType getObjectType() const override {
+        return BoardObjectType::Mine;
+    }
+    int onCollideWithShell() override {
+        return -1;
     }
 };

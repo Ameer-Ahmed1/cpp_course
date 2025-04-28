@@ -16,7 +16,10 @@ public:
         return instance;
     }
 
-    void somePureVirtualFunction() override {
+    void onCollideWithShell() override {
         // No behavior
+    }
+    BoardObjectType getObjectType() const override {
+        return BoardObjectType::Empty;
     }
 };
