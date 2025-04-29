@@ -16,9 +16,6 @@ public:
         return instance;
     }
 
-    void onCollideWithShell() override {
-        // No behavior
-    }
     BoardObjectType getObjectType() const override {
         return BoardObjectType::Empty;
     }

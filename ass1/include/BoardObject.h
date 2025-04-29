@@ -9,11 +9,12 @@ class BoardObject {
 protected:
     Point pos;  // Position of the object
     BoardObject(Point p) : pos(p) {}
+    
 
 public:
     virtual ~BoardObject() = default;
-    virtual void onCollideWithShell() = 0;
     virtual BoardObjectType getObjectType() const = 0; // PURE VIRTUAL function
+    virtual void destroyMyself() = 0;
 
     static *BoardObject checkColl(Point pos) { //givin point return whats in that point
         return board->matrix[p.x][p.y]; 

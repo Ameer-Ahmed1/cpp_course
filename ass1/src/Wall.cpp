@@ -21,15 +21,24 @@ public:
     }
 
     //return 0 if has to be deletd, return -1 if nothing happend
-    void onCollideWithShell() override {
-        decreaseLife();
-        if (isDestroyed()) {
-            return 0; 
+
+    /*int collidedWithObject(BoardObject& object) override {// Return value: winner's ID (1 or 2), 0 for invalid move, or -1 if nothing happens.
+        BoardObjectType type = object.getObjectType();
+        switch (type) {
+            case BoardObjectType::Tank: {return 0;}
+            case BoardObjectType::Shell: {
+                decreaseLife();
+                if (isDestroyed()) {}
+                }
+            default: {return -1;}
         }
-        return -1;
-    }
+    }*/
     BoardObjectType getObjectType() const override {
         return BoardObjectType::Wall;
+    }
+    void destroyMyself() override {
+        board->matrix[pos.x][pos.y] = &Empty::getInstance();
+        delete this;
     }
 
 };
