@@ -32,12 +32,20 @@ public:
                 shouldBeDestroyed = true;  // Mark yourself
                 result = collidedObject.onCollideWithShell();
                 if (result == 0){//	The collided object must be deleted. 
-                    delete collidedObject; 
+                    collidedObject.destroymyself(); 
                     result = -1
                 }
                 return result                                   
             }
         }
         return -1;
+    }
+
+    void destroyMyself() {
+        auto it = std::find(tank.activeShells.begin(), tank.activeShells.end(), this);
+        if (it != tank.activeShells.end()) {
+            tank.activeShells.erase(it);
+        }
+        delete this;
     }
 };
