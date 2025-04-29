@@ -5,7 +5,7 @@
 
 class GameManager {
 private:
-    int looser = -1;
+    int winner = -1;
     tank& tank1 ;
     tank& tank2 ;
 
@@ -85,45 +85,31 @@ public:
     }
     void start(){
         int steps = 40
+        int res;
         while (getSteps()>0){
-
-             // --- 1. Move tank1 shells ---
-            for (auto it = tank1->activeShells.begin(); it != tank1->activeShells.end(); ) {
+            //moving the shels
+            for (auto it = board->activeShells.begin(); it != board->activeShells.end(); ) {
                 Shell* shell = *it;
-                int looser = shell->moveShell();
-                if (looser == 1 || looser == 2) {
-                    break;
+                res = shell->moveShell();
+                if (res == 1){
+                    if (winner == 2){ return -2 ;} //gameover both loose
+                    else{winner = res;}
                 }
-
-                if (shell->shouldBeDestroyed) {
-                    shell->destroyMyself();
-                } 
+                if (res == 2){
+                    if (winner == 1){ return -2 ;} //gameover both loose
+                    else{winner = res;}
+                }
                 else {
                     ++it;
                 }
             }
-            // --- 1. Move tank2 shells ---
-            for (auto it = tank2->shells.begin(); it != tank2->shells.end(); ) {
-                Shell* shell = *it;
-                int looser = shell->moveShell();
-                if (looser == 1 || looser == 2) {
-                    break;
-                }
-
-                if (shell->shouldBeDestroyed) {
-                    shell->destroyMyself();
-                } 
-                else {
-                    ++it;
-                }
-            }
-
+            board.clearInactiveShells();
             if (tank1.getRemainingShells() == 0 && tank2.getRemainingShells()){step--;}
             ///need to be fixed 
             action1 = algo1();
             action2 = algo2();
-            switch{
-
+            switch1{
+                
             }
             switch{
                 
