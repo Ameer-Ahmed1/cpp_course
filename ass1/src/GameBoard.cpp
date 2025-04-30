@@ -1,7 +1,7 @@
 #pragma once
 #include <vector>
-#include "BoardObject.h"
-#include "Shell.h" 
+#include "include/BoardObject.h"
+#include "Shell.cpp" 
 
 class GameBoard {
 public:
