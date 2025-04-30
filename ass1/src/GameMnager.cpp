@@ -103,13 +103,17 @@ public:
                     ++it;
                 }
             }
+            
             board.clearInactiveShells();
             if (tank1.getRemainingShells() == 0 && tank2.getRemainingShells()){step--;}
             ///need to be fixed 
             action1 = algo1();
             action2 = algo2();
             switch1{
-                
+                if (action == "shoot"){
+
+                }
+                else if 
             }
             switch{
                 

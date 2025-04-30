@@ -4,6 +4,8 @@ class Empty : public BoardObject {
 private:
     // Private constructor to prevent instantiation
     Empty() : BoardObject(Point(0, 0)) {}  // position doesn't matter for Empty
+    static Empty* instance; // singleton pointer version
+
 
 public:
     // Delete copy constructor and assignment
@@ -12,11 +14,17 @@ public:
 
     // Static method to access the single instance
     static Empty& getInstance() {
-        static Empty instance;
-        return instance;
+        if (!instance)
+            instance = new Empty();
+        return *instance;
     }
 
     BoardObjectType getObjectType() const override {
         return BoardObjectType::Empty;
     }
-};
+    void destroyMyself() override {
+        delete instance;
+        instance = nullptr;
+    }
+};   
+Empty* Empty::instance = nullptr;

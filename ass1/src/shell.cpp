@@ -22,13 +22,16 @@ public:
         for (int i =0 ; i<2 ; i++){//moving 2 steps
             pos.move(dir,GetBoardWidth(),GetBoardHight());
             BoardObject* collidedObject = checkColl(pos);
-            return this.collidedWithObject(collidedObject);
+            if (getObjectType(collidedObject) != Empty ||getObjectType(collidedObject) != Mine){
+                return this.collidedWithObject(collidedObject);}
         }
+        return -1;
     }
 
     void destroyMyself() override {//dosent delete from ram 
         board->matrix[pos.x][pos.y] = &Empty::getInstance();
-        board.addInactiveShell(this);
+        board->addInactiveShell(this);
+        
     }
 
     int collidedWithObject(BoardObject& object) override {// Return value: winner's ID (1 or 2), 0 for invalid move, or -1 if nothing happens or -2 both loos.
@@ -38,10 +41,12 @@ public:
                 this.destroyMyself();
                 object.destroyMyself();
                 return -1;} 
-            case BoardObjectType::Tank: {return (object.id == 1) ? 2 : 1;}
+            case BoardObjectType::Tank: {
+                int id = static_cast<Tank&>(object).getId();
+                return (id == 1) ? 2 : 1;}
             case BoardObjectType::Wall: {
                 object.decreaseLife();
-                if (object.isDestroyed()) {Object.destroyMyself();}
+                if (object.isDestroyed()) {object.destroyMyself();}
                 this.destroyMyself();
                 return -1;
             }

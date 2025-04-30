@@ -23,7 +23,8 @@ private:
     int waitingTime;
     int shootingTime;
     int remainingShells;
-    bool waitingBackward = false
+    int backwardWaitTime = 0;
+    bool waitingBackward = false;
     //std::vector<Shell*> activeShells;
     int id;
     int collidedWithObject(BoardObject& object) {// Return value: winner's ID (1 or 2), 0 for invalid move, or -1 if nothing happens or -2 both loos.
@@ -38,11 +39,11 @@ private:
     }
     int realMov(Point newpos,Point oldpos){
         int res;
-        BoardObject* collidedObject = board.checkColl(newPos);
+        BoardObject* collidedObject = board->checkColl(newPos);
         res = collidedWithObject(collidedObject);
         if (res == -1){//we can move
-            board.updateGameBoard(&Empty::getInstance(),oldpos.x,oldpos.y);
-            board.updateGameBoard(this,newpos.x,newpos.y);
+            board->updateGameBoard(&Empty::getInstance(),oldpos.x,oldpos.y);
+            board->pdateGameBoard(this,newpos.x,newpos.y);
             this.pos = newpos;
         }
         return res ;
@@ -101,6 +102,17 @@ public:
     BoardObjectType getObjectType() const override {
         return BoardObjectType::Tank;
     }
+    void destroyMyself() override {
+        /*for (Shell* shell : activeShells) {
+            shell->destroyMyself(); // Let each shell clean itself
+        }
+        activeShells.clear();*/
+    
+        board->matrix[pos.x][pos.y] = &Empty::getInstance();
+    
+        delete this;
+    }
+    
 };
 
 // Tank class method implementations
@@ -113,7 +125,7 @@ std::tuple<Point,Point> Tank::moveForward() {
         return make_tuple(pos,pos);
         }
     Point newPos = pos;
-    newPos.move(dir,GetBoardWidth(),GetBoardHight());
+    newPos.move(dir,GetBoardWidth(),GetBoardHeight());
     //return realmov(newPos,pos); // Return the *desired* new position
     return make_tuple(newPos,pos);
 }
@@ -158,8 +170,8 @@ bool Tank::canShoot() const {
 bool Tank::shoot(GameManager& gameManager, Tank* otherTank) {
     if (!canShoot()) return false;
     // Create a new shell. The GameManager will manage its lifetime.
-    Shell* shell = new Shell(Point(pos.x, pos.y), *this, dir, 2);
-    gameManager.addShell(shell); // Add to GameManager's shell list
+    Shell* shell = new Shell(Point(pos.x, pos.y), *this, dir);
+    board->addActiveShells(shell); // Add to GameManager's shell list
     remainingShells--;
     shootingTime = 4;
     return true;
@@ -175,15 +187,5 @@ bool Tank::shoot(GameManager& gameManager, Tank* otherTank) {
     }
 }*/
 
-void destroyMyself() override {
-    /*for (Shell* shell : activeShells) {
-        shell->destroyMyself(); // Let each shell clean itself
-    }
-    activeShells.clear();*/
-
-    board->matrix[pos.x][pos.y] = &Empty::getInstance();
-
-    delete this;
-}
-
+=
 

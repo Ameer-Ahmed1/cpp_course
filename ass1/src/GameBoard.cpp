@@ -19,7 +19,7 @@ public:
     }
 
     //add shell to inactiveShells
-    void addInactiveShells(Shell* shell) {
+    void addInactiveShell(Shell* shell) {
         // 1. Add to inactiveShells
         inactiveShells.push_back(shell);
 
@@ -40,4 +40,15 @@ public:
     void addActiveShells(Shell* shell) {
         activeShells.push_back(shell);
     }
+    void clearBoard() {
+        for (int x = 0; x < width; ++x) {
+            for (int y = 0; y < height; ++y) {
+                if (matrix[x][y] != &Empty::getInstance()) {
+                    delete matrix[x][y];
+                    matrix[x][y] = &Empty::getInstance();
+                }
+            }
+        }
+    }
+    
 };
