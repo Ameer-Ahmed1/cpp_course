@@ -1,4 +1,3 @@
-#include "TankAlgorithm.cpp"  // Base class interface
 #include "GameBoard.cpp"      // For GameBoard reference
 #include "Tank.cpp"           // For Tank class
 #include "Point.h"
