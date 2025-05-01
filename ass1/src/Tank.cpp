@@ -1,8 +1,8 @@
 #include "BoardObject.h"
-#include "Shell.h"
+#include "Shell.cpp"
 #include "GameBoard.h"
-#include "GameManager.h"
-#include "Empty.h"
+#include "GameManager.cpp"
+#include "Empty.cpp"
 #include <vector>
 #include <tuple>
 

@@ -1,6 +1,6 @@
 #pragma once
 #include <vector>
-#include "include/BoardObject.h"
+#include "BoardObject.h"
 #include "Shell.cpp" 
 
 class GameBoard {
