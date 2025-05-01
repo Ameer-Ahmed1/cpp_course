@@ -35,7 +35,7 @@ private:
      * @param oldpos The current position before moving.
      * @return Same return value logic as collidedWithObject().
      */
-    int applyMovement(Point newpos, Point oldpos);
+    int applyMovement(std::tuple<Point, Point> movement);
 
 public:
     /**
@@ -62,7 +62,7 @@ public:
     int getId() const;
 
     /// @return True if the tank has at least one shell.
-    bool checkRemaining() const;
+    bool hasShellsRemaining() const;
 
     /// Decrease remaining shells by 1.
     void decreaseShells();

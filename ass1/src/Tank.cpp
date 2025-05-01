@@ -63,6 +63,8 @@ public:
     void resetShootingTime() { shootingTime = 4; }
     void setLastAction(bool action) { lastAction = action; }
     bool getLastAction() const { return lastAction; }
+    bool getwaitingBackward() const {return waitingBackward; }
+    void setwaitingBackward(bool a) const {waitingBackward = a ; }
     int getShootingTime() const { return shootingTime; }
     int getbackwardWaitTime() const { return backwardWaitTime; }
     void setbackwardWaitTime(int t) {backwardWaitTime = t; }

@@ -5,7 +5,6 @@
 
 class GameManager {
 private:
-    int winner = -1;
     Tank& tank1 ;
     Tank& tank2 ;
     RunAwayAlgorithm runner;
@@ -88,6 +87,7 @@ public:
     }
     void start(GameBoard* board){//-2 both loose , -1 tie ,1,2 winner
         int res;
+        int winner = -1;
         while (getSteps()>0){ 
             //updateing the waiting time and shooting time
             tank1.decreaseShootingTime();
@@ -151,8 +151,8 @@ public:
             return -1;
             }
         else if (action == 'F'){
-            if (tank.waitingBackward) {
-                tank.waitingBackward = false;  // cancel backward
+            if (tank.getwaitingBackward()) {
+                tank.setwaitingBackward(false);  // cancel backward
                 return -1;
             }
             int res = tank.moveForward();
@@ -160,10 +160,10 @@ public:
             return res;
         }
         else if (action == 'B'){
-            if (tank.waitingBackward) {
+            if (tank.getwaitingBackward()) {
                 if (tank.getbackwardWaitTime() > 0){return -1;}// Still waiting, nothing happens
                 else {// Now perform the backward move
-                    tank.waitingBackward = false;
+                    tank.setwaitingBackward(false);
                     int res= tank.moveBackward();
                     if (res != 0){appendToFile("movebackward");tank.setLastAction(true);}
                     return res;
@@ -175,39 +175,19 @@ public:
                 if (res != 0){appendToFile("movebackward");tank.setLastAction(true);}
                 return res;
             }
-            tank.waitingBackward = true;
+            tank.setwaitingBackward(true);
             tank.setbackwardWaitTime(2);
             return -1; // Stay in place for now
         }
 
         //rotaion ..
-        else if (action == 'R'){
+        /*else if (action == 'R'){
             if (tank.rotate(....)){
                 appendToFile("rotation");
                 tank.setLastAction(false);} 
             return -1;
-        }
+        }*/
         else{return -1;}
-
-
     }
 
-
-    int getSteps() const {
-        return steps;
-    }
-
-    int getWinner() const {
-        return winner;
-    }
-
-    void setWinner(int w) {
-        winner = w;
-    }
-
-
-
-
-
-    
 };
