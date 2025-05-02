@@ -1,6 +1,5 @@
 #pragma once
-#include "BoardObject.h"
-#include "Empty.h"
+#include "Enums.h"
 
 class Mine : public BoardObject {
 private:

@@ -1,16 +1,15 @@
 #pragma once
 #include "BoardObject.h"
-#include "Enums.h"
 
-
+/**
+ * @brief Represents a shell fired by a tank, moving in a given direction.
+ */
 class Shell : public BoardObject {
 public:
-    Tank& tank;         // The tank that fired the shell
-    Direction dir;      // Direction of movement
+    Tank& tank;         // The tank that fired this shell
+    Direction dir;      // Direction the shell is moving
 
-public:
     Shell(Point p, Tank& t, Direction d);
-
     BoardObjectType getObjectType() const override;
     int moveShell();
     void destroyMyself() override;

@@ -4,8 +4,6 @@
 #include "Enums.h"
 #include <tuple>
 
-class Shell;
-class GameBoard;
 
 /**
  * @brief Represents a controllable tank on the game board.

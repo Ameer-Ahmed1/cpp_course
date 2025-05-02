@@ -1,4 +1,5 @@
 #pragma once
+#include "Enums.h"
 #include "BoardObject.h"
 
 class Empty : public BoardObject {

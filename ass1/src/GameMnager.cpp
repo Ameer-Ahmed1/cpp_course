@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <vector>
 #include <BoardObject.h>
 #include <Tank.h>
 #include <GameBoard.h>
@@ -11,6 +10,8 @@
 #include <Empty.h>
 #include <RunAwayAlgorithm.h>;
 #include <ChaseAlgorithm.h>;
+#include <Shell.h>;
+
 
 
 class GameManager {
@@ -57,7 +58,7 @@ public:
                 char c = (x < line.size()) ? line[x] : ' ';
                 switch (c) {
                     case ' ':
-                        board->matrix[x][y] = &Empty::getInstance();
+                        board->updateGameBoard(&Empty::getInstance(),x,y);
                         break;
                     case '#':
                         board->matrix[x][y] = new Wall(Point(x,y,width,height));

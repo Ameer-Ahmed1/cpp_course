@@ -52,7 +52,7 @@ bool Tank::rotate(Direction newDir) {
 
 bool Tank::shoot() {
     if (!canShoot() || waitingBackward) return false;
-    Shell* shell = new Shell(Point(pos.x, pos.y, board->getHeight(), board->getWidth()), *this, dir);
+    Shell* shell = new Shell(Point(pos.x, pos.y, board->height, board->width), *this, dir);
     board->addActiveShells(shell);
     decreaseShells();
     resetShootingTime();

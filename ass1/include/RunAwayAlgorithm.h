@@ -7,7 +7,7 @@
 
 #endif //RUNAWAYALGORITHM_H
 #include <TankAlgorithm.h>
-class RunAwayAlgorithm : public TankAlgorithm {
+class RunAwayAlgorithm : public TankAl6gorithm {
 public:
     char decideAction(const Tank& myTank, const Tank& enemyTank, const GameBoard& gameBoard) override;
 

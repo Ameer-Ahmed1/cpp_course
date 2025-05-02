@@ -1,9 +1,6 @@
-#include <vector>
-#include <queue>
-#include <utility> // for pair
-#include <algorithm>
 #include "Tank.h"
 #include "GameBoard.h"
+#pragma once
 
 // Base Algorithm Interface
 

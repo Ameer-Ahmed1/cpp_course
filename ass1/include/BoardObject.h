@@ -2,12 +2,12 @@
 // Created by Admin on 5/2/2025.
 //
 
-#ifndef BOARDOBJECT_H
-#define BOARDOBJECT_H
 
 #pragma once
 #include "Point.h"
 #include "Enums.h"
+#include "GameBoard.h"
+
 
 class BoardObject {
 public:
@@ -29,4 +29,3 @@ public:
 
 
 
-#endif //BOARDOBJECT_H
