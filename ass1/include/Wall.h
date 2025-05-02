@@ -1,6 +1,6 @@
 #pragma once
 #include "BoardObject.h"
-#include "Empty.h"  // Needed for destroyMyself()
+#include "Empty.h"
 
 class Wall : public BoardObject {
 private:

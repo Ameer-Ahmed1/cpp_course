@@ -1,6 +1,8 @@
-#include "BoardObject.h"
-#include "Tank.cpp"  // since no Tank.h
-#include <iostream>  // optional for debugging
+#include "../include/BoardObject.h"
+#include "Tank.h"  // since no Tank.h
+#include "Empty.h"  // since no Tank.h
+#include "Wall.h"  // since no Tank.h
+
 
 enum class Direction;  // forward declaration
 
@@ -22,8 +24,8 @@ public:
         for (int i =0 ; i<2 ; i++){//moving 2 steps
             pos.move(dir,GetBoardWidth(),GetBoardHight());
             BoardObject* collidedObject = checkColl(pos);
-            if (getObjectType(collidedObject) != Empty ||getObjectType(collidedObject) != Mine){
-                return this.collidedWithObject(collidedObject);}
+            if (collidedObject->getObjectType() != BoardObjectType::Empty ||collidedObject->getObjectType() != BoardObjectType::Mine){
+                return collidedWithObject(*collidedObject);}
         }
         return -1;
     }
@@ -34,20 +36,21 @@ public:
         
     }
 
-    int collidedWithObject(BoardObject& object) override {// Return value: winner's ID (1 or 2), 0 for invalid move, or -1 if nothing happens or -2 both loos.
+    int collidedWithObject(BoardObject& object) {// Return value: winner's ID (1 or 2), 0 for invalid move, or -1 if nothing happens or -2 both loos.
         BoardObjectType type = object.getObjectType();
         switch (type) {
             case BoardObjectType::Shell: {
-                this.destroyMyself();
+                destroyMyself();
                 object.destroyMyself();
                 return -1;} 
             case BoardObjectType::Tank: {
                 int id = static_cast<Tank&>(object).getId();
                 return (id == 1) ? 2 : 1;}
             case BoardObjectType::Wall: {
-                object.decreaseLife();
-                if (object.isDestroyed()) {object.destroyMyself();}
-                this.destroyMyself();
+                Wall& wall = static_cast<Wall&>(object);
+                wall.decreaseLife();
+                if (wall.isDestroyed()) {wall.destroyMyself();}
+                destroyMyself();
                 return -1;
             }
             default: {return -1;}// Nothing happens

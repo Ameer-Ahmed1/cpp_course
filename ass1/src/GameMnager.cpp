@@ -2,6 +2,16 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <BoardObject.h>
+#include <Tank.h>
+#include <GameBoard.h>
+#include <Wall.h>
+#include <Mine.h>
+#include <Point.h>
+#include <Empty.h>
+#include <RunAwayAlgorithm.h>;
+#include <ChaseAlgorithm.h>;
+
 
 class GameManager {
 private:
@@ -25,9 +35,8 @@ private:
     }
 
 public:
-
-    GameBoard* initialization(const std::string& filePath,const std::string outputfile) {
-        this.outputfile = outputfile;
+    GameBoard* initialization(const std::string& filePath,const std::string output) {
+        outputfile = outputfile;
         std::ifstream file(filePath);
         if (!file.is_open()) {
             std::cerr << "Error: Cannot open file " << filePath << std::endl;
@@ -51,22 +60,22 @@ public:
                         board->matrix[x][y] = &Empty::getInstance();
                         break;
                     case '#':
-                        board->matrix[x][y] = new Wall(Point(x, y));
+                        board->matrix[x][y] = new Wall(Point(x,y,width,height));
                         break;
                     case '@':
-                        board->matrix[x][y] = new Mine(Point(x, y));
+                        board->matrix[x][y] = new Mine(Point(x,y,width,height));
                         break;
                     case '1': {
-                        Tank* t = new Tank(Point(x, y), Direction::L, 16, 1);
+                        Tank* t = new Tank(Point(x,y,width,height), Direction::L, 16, 1);
                         board->matrix[x][y] = t;
-                        tank1 = t;
+                        tank1 = *t;
                         foundTanks++;
                         break;
                     }
                     case '2': {
-                        Tank* t = new Tank(Point(x, y), Direction::R, 16, 2);
+                        Tank* t = new Tank(Point(x,y,width,height), Direction::R, 16, 2);
                         board->matrix[x][y] = t;
-                        tank2 = t;
+                        tank2 = *t;
                         foundTanks++;
                         break;
                     }
@@ -85,16 +94,15 @@ public:
 
         return board;
     }
-    void start(GameBoard* board){//-2 both loose , -1 tie ,1,2 winner
+    int start(GameBoard* board){//-2 both loose , -1 tie ,1,2 winner
         int res;
         int winner = -1;
-        while (getSteps()>0){ 
+        while (steps>0){
             //updateing the waiting time and shooting time
             tank1.decreaseShootingTime();
             tank2.decreaseShootingTime();
             tank1.decreaseWaitingTime();
             tank2.decreaseWaitingTime();
-            if 
             //moving the shels
             for (auto it = board->activeShells.begin(); it != board->activeShells.end(); ) {
                 Shell* shell = *it;

@@ -1,7 +1,7 @@
 #include <SFML/Graphics.hpp>
-#include "Tank.h"  // Assuming you have a Tank class
-#include "Shell.h" // Assuming you have a Shell class
-#include "Wall.h"  // Assuming you have a Wall class
+#include "../include/Tank.h"
+#include "../include/Shell.h"
+#include "../include/Wall.h"
 
 int main() {
     sf::RenderWindow window(sf::VideoMode(800, 600), "Tank Battle");

@@ -2,10 +2,11 @@
 #include <queue>
 #include <utility> // for pair
 #include <algorithm>
-#include "Tank.cpp"
-#include "GameBoard.cpp"
+#include "Tank.h"
+#include "GameBoard.h"
 
 // Base Algorithm Interface
+
 class TankAlgorithm {
 public:
     virtual ~TankAlgorithm() = default;

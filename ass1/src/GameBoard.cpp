@@ -1,7 +1,9 @@
 #pragma once
 #include <vector>
 #include "BoardObject.h"
-#include "Shell.cpp" 
+#include "Shell.h"
+#include <algorithm>
+#include <Empty.h>
 
 class GameBoard {
 public:
@@ -17,6 +19,10 @@ public:
             matrix[x][y] = obj;
         }
     }
+     BoardObject*  checkColl (Point p)const { //givin point return whats in that point
+        return (matrix[p.x][p.y]);
+    }
+
 
     //add shell to inactiveShells
     void addInactiveShell(Shell* shell) {
@@ -50,5 +56,10 @@ public:
             }
         }
     }
+
+
+
+
+
     
 };

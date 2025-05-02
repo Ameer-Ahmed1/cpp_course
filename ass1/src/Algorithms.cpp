@@ -4,8 +4,8 @@
 #include <algorithm>
 
 // Forward declarations
-class Tank;
 class GameBoard;
+#include "Tank.h"
 
 // Base Algorithm Interface
 class TankAlgorithm {

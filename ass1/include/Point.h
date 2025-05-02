@@ -1,5 +1,6 @@
 #pragma once
 #include "Enums.h"
+#include <functional>
 
 class Point {
 public:
@@ -25,7 +26,6 @@ public:
         x = (x % width + width) % width;
         y = (y % height + height) % height;
     }
-    
 
     void moveBack(Direction dir, int width, int height) {
         switch (dir) {
@@ -41,5 +41,22 @@ public:
         }
         x = (x % width + width) % width;
         y = (y % height + height) % height;
+    }
+
+    // Equality
+    bool operator==(const Point& other) const {
+        return x == other.x && y == other.y;
+    }
+
+    // Inequality
+    bool operator!=(const Point& other) const {
+        return !(*this == other);
+    }
+};
+
+// Hash function for Point
+struct PointHash {
+    std::size_t operator()(const Point& p) const {
+        return std::hash<int>()(p.x) ^ (std::hash<int>()(p.y) << 1);
     }
 };

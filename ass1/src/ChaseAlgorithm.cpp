@@ -1,7 +1,14 @@
-#include "GameBoard.cpp"      // For GameBoard reference
-#include "Tank.cpp"           // For Tank class
-#include "Point.h"
+#include "../include/GameBoard.h"
+#include "../include/Tank.h"
+#include "../include/Point.h"
 #include <cmath>            // For abs() function
+#include "TankAlgorithm.h"            // For abs() function
+#include <unordered_map>
+#include <unordered_set>
+#include <functional>
+#include <queue>
+#include <functional>
+
 
 class ChaseAlgorithm : public TankAlgorithm {
 public:
@@ -18,11 +25,11 @@ public:
 private:
    bool ChaseAlgorithm::canShootEnemy(const Tank& myTank, const Tank& enemyTank, const GameBoard& gameBoard) {
     // Get positions and direction
-    Point myPos = myTank.getPosition();
-    Point enemyPos = enemyTank.getPosition();
+    Point myPos = myTank.pos;
+    Point enemyPos = enemyTank.pos;
     Direction dir = myTank.getDirection();
-    int width = gameBoard.getWidth();
-    int height = gameBoard.getHeight();
+    int width = gameBoard.width;
+    int height = gameBoard.height();
 
     // Calculate optimal shooting distance (half of smallest board dimension)
     int optimalDistance = std::min(width, height) / 2;
@@ -54,26 +61,26 @@ bool ChaseAlgorithm::isInLineOfFire(const Point& myPos, const Point& enemyPos, D
                                    int width, int height) {
     // Handle different directions
     switch (dir) {
-        case Direction::UP:
+        case Direction::U:
             return myPos.x == enemyPos.x && 
                    (myPos.y >= enemyPos.y || (myPos.y == 0 && enemyPos.y == height-1));
-        case Direction::DOWN:
+        case Direction::D:
             return myPos.x == enemyPos.x && 
                    (myPos.y <= enemyPos.y || (myPos.y == height-1 && enemyPos.y == 0));
-        case Direction::LEFT:
+        case Direction::L:
             return myPos.y == enemyPos.y && 
                    (myPos.x >= enemyPos.x || (myPos.x == 0 && enemyPos.x == width-1));
-        case Direction::RIGHT:
+        case Direction::R:
             return myPos.y == enemyPos.y && 
                    (myPos.x <= enemyPos.x || (myPos.x == width-1 && enemyPos.x == 0));
         // Diagonal cases
-        case Direction::UP_LEFT:
+        case Direction::UL:
             return checkDiagonalLine(myPos, enemyPos, -1, -1, width, height);
-        case Direction::UP_RIGHT:
+        case Direction::UR:
             return checkDiagonalLine(myPos, enemyPos, 1, -1, width, height);
-        case Direction::DOWN_LEFT:
+        case Direction::DL:
             return checkDiagonalLine(myPos, enemyPos, -1, 1, width, height);
-        case Direction::DOWN_RIGHT:
+        case Direction::DR:
             return checkDiagonalLine(myPos, enemyPos, 1, 1, width, height);
         default:
             return false;
@@ -92,26 +99,26 @@ bool ChaseAlgorithm::checkDiagonalLine(const Point& start, const Point& end,
         current.y = (current.y + dy + height) % height;
         
         // If we've wrapped all the way around without finding the target
-        if (current == start) return false;
+        if (current == start ) return false;
     }
 }
 
 bool ChaseAlgorithm::hasObstaclesInPath(const Point& start, const Point& end, 
                                        Direction dir, const GameBoard& gameBoard) {
-    int width = gameBoard.getWidth();
-    int height = gameBoard.getHeight();
+    int width = gameBoard.width;
+    int height = gameBoard.height;
     
     // Get step directions based on tank's facing
     int dx = 0, dy = 0;
     switch (dir) {
-        case Direction::UP: dy = -1; break;
-        case Direction::DOWN: dy = 1; break;
-        case Direction::LEFT: dx = -1; break;
-        case Direction::RIGHT: dx = 1; break;
-        case Direction::UP_LEFT: dx = -1; dy = -1; break;
-        case Direction::UP_RIGHT: dx = 1; dy = -1; break;
-        case Direction::DOWN_LEFT: dx = -1; dy = 1; break;
-        case Direction::DOWN_RIGHT: dx = 1; dy = 1; break;
+        case Direction::U: dy = -1; break;
+        case Direction::D: dy = 1; break;
+        case Direction::L: dx = -1; break;
+        case Direction::R: dx = 1; break;
+        case Direction::UL: dx = -1; dy = -1; break;
+        case Direction::UR: dx = 1; dy = -1; break;
+        case Direction::DL: dx = -1; dy = 1; break;
+        case Direction::DR: dx = 1; dy = 1; break;
     }
     
     Point current = start;
@@ -124,7 +131,7 @@ bool ChaseAlgorithm::hasObstaclesInPath(const Point& start, const Point& end,
         if (current == end) return false;
         
         // Check for walls or other obstacles
-        if (gameBoard.isWall(current.x, current.y)) {
+        if ((gameBoard.checkColl(current))->getObjectType() == BoardObjectType::Wall){
             return true;
         }
         
@@ -134,14 +141,14 @@ bool ChaseAlgorithm::hasObstaclesInPath(const Point& start, const Point& end,
 }
 
 char ChaseAlgorithm::findPathToEnemy(const Tank& myTank, const Tank& enemyTank, const GameBoard& gameBoard) {
-    const int width = gameBoard.getWidth();
-    const int height = gameBoard.getHeight();
-    Point start = myTank.getPosition();
-    Point target = enemyTank.getPosition();
+    const int width = gameBoard.width;
+    const int height = gameBoard.height;
+    Point start = myTank.pos;
+    Point target = enemyTank.pos;
     Direction currentDir = myTank.getDirection();
 
     // Collision check using Tank's method
-    if (start == target) return 'X';
+    if (target == start) return 'X';
 
     // BFS initialization
     std::queue<Point> q;
@@ -192,9 +199,9 @@ char ChaseAlgorithm::findPathToEnemy(const Tank& myTank, const Tank& enemyTank, 
 
             // Skip if invalid position
             if (visited.count(newPos) || 
-                !gameBoard.isEmpty(newPos.x, newPos.y) || 
-                gameBoard.isWall(newPos.x, newPos.y) || 
-                gameBoard.isMine(newPos.x, newPos.y)) {
+                !((gameBoard.checkColl(newPos))->getObjectType() == BoardObjectType::Empty) ||
+                ((gameBoard.checkColl(newPos))->getObjectType() == BoardObjectType::Wall)||
+                ((gameBoard.checkColl(newPos))->getObjectType() == BoardObjectType::Mine)) {
                 continue;
             }
 
@@ -227,9 +234,9 @@ Direction oppositeDirection(Direction dir) {
 }
 
 char getSafeRelativeMove(const Tank& tank, const GameBoard& gameBoard) {
-    const int width = gameBoard.getWidth();
-    const int height = gameBoard.getHeight();
-    Point current = tank.getPosition();
+    const int width = gameBoard.width;
+    const int height = gameBoard.height;
+    Point current = tank.pos;
     Direction dir = tank.getDirection();
 
     // Check forward first
@@ -238,9 +245,7 @@ char getSafeRelativeMove(const Tank& tank, const GameBoard& gameBoard) {
     forwardPos.x = (forwardPos.x + width) % width;
     forwardPos.y = (forwardPos.y + height) % height;
     
-    if (gameBoard.isEmpty(forwardPos.x, forwardPos.y) && 
-        !gameBoard.isWall(forwardPos.x, forwardPos.y) && 
-        !gameBoard.isMine(forwardPos.x, forwardPos.y)) {
+       if ((gameBoard.checkColl(forwardPos))->getObjectType() == BoardObjectType::Empty) {
         return 'F';
     }
 
@@ -256,9 +261,7 @@ char getSafeRelativeMove(const Tank& tank, const GameBoard& gameBoard) {
         testPos.x = (testPos.x + width) % width;
         testPos.y = (testPos.y + height) % height;
         
-        if (gameBoard.isEmpty(testPos.x, testPos.y) && 
-            !gameBoard.isWall(testPos.x, testPos.y) && 
-            !gameBoard.isMine(testPos.x, testPos.y)) {
+        if ((gameBoard.checkColl(testPos))->getObjectType() == BoardObjectType::Empty) {
             return rot;
         }
     }
@@ -269,9 +272,7 @@ char getSafeRelativeMove(const Tank& tank, const GameBoard& gameBoard) {
     backwardPos.x = (backwardPos.x + width) % width;
     backwardPos.y = (backwardPos.y + height) % height;
     
-    if (gameBoard.isEmpty(backwardPos.x, backwardPos.y) && 
-        !gameBoard.isWall(backwardPos.x, backwardPos.y) && 
-        !gameBoard.isMine(backwardPos.x, backwardPos.y)) {
+    if ((gameBoard.checkColl(backwardPos))->getObjectType() == BoardObjectType::Empty) {
         return 'B';
     }
 

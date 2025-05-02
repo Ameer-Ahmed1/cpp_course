@@ -1,11 +1,10 @@
 #pragma once
 #include "BoardObject.h"
-#include "Empty.h"
-#include "Enums.h"  // for Direction
-class Tank;         // Forward declaration
+#include "Enums.h"
+
 
 class Shell : public BoardObject {
-private:
+public:
     Tank& tank;         // The tank that fired the shell
     Direction dir;      // Direction of movement
 
@@ -15,5 +14,5 @@ public:
     BoardObjectType getObjectType() const override;
     int moveShell();
     void destroyMyself() override;
-    int collidedWithObject(BoardObject& object) override;
+    int collidedWithObject(BoardObject& object);
 };

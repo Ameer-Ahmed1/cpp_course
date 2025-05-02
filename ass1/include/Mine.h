@@ -4,14 +4,10 @@
 
 class Mine : public BoardObject {
 private:
-    bool active;
 
 public:
-    Mine(Point p, bool isActive);
+    Mine(Point p);
 
-    bool isActive() const;
-    void deactivate();
-    void activate();
 
     void destroyMyself() override;
     BoardObjectType getObjectType() const override;

@@ -1,5 +1,6 @@
-#include "BoardObject.h"
-#include <iostream>
+#include "../include/BoardObject.h"
+#include <Empty.h>
+
 
 class Wall : public BoardObject {
 private:
