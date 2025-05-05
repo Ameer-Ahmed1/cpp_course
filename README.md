@@ -88,6 +88,6 @@ make
 To run the executable:
 
 ```bash
-./tanks_game < input.txt >
+./tanks_game <data/input.txt >
 ```
 
